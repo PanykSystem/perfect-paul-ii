@@ -1,17 +1,28 @@
 # Perfect Paul ][
 
-A DECtalk speech synthesizer card for the Apple II, built on a Raspberry Pi
-Pico. Named for DECtalk's default voice, `[:np]`.
+A speech synthesizer card for the Apple II, built on a Raspberry Pi Pico.
+Named for DECtalk's default voice, `[:np]`.
 
-It speaks plain text, sings in DECtalk's phoneme mode, and holds a conversation.
-Drive it from BASIC with `POKE`.
+**One card, two voices.** Flash either firmware; the hardware is identical and
+cannot tell which it is running.
+
+| | |
+|---|---|
+| **DECtalk** | plain text, and singing in DECtalk's phoneme mode. The 1980s DEC voice the card is named for. |
+| **SP0256-AL2** | an emulated General Instrument SP0256-AL2 — the chip in the **Echo ][**, the **Cricket** and the Amstrad **SSA-1** — with **English text-to-speech** in firmware via the 1976 Naval Research Laboratory letter-to-sound rules, *and* a **native allophone mode** for writing speech by hand the way the 1980s listings do. |
+
+Drive either from BASIC with `POKE`. The SP0256 firmware is also the one you
+can simply download and flash: it is GPL-3 throughout, so ready images live in
+[`firmware/`](firmware/) — see
+[The SP0256-AL2 firmware](#the-sp0256-al2-firmware).
 
 ![Perfect Paul II, final revision 2 board](images/perfect-paul-ii-v2.jpg)
 
 **Status: finished.** The final revision 2 board has been fabricated,
-assembled and tested in an Apple II, and everything works. The card announces
-itself out loud at power-up, and both audio paths — I2S through a MAX98357A
-and PWM through a PAM8403 — are on the board, selected with a jumper.
+assembled and tested in an Apple II, and everything works — on both firmwares.
+The card announces itself out loud at power-up, and both audio paths — I2S
+through a MAX98357A and PWM through a PAM8403 — are on the board, selected with
+a jumper.
 **The Gerbers are published:** [`pcb/gerbers-v2.zip`](pcb/gerbers-v2.zip).
 
 ## Latest News
@@ -23,6 +34,8 @@ same slot interface, a different `.uf2` — and it speaks **English text**,
 converted in firmware by the 1976 Naval Research Laboratory letter-to-sound
 rules, as well as allophones. See
 [The SP0256-AL2 firmware](#the-sp0256-al2-firmware).
+
+**[There is a video](https://youtu.be/zNYNel9VgRk).**
 
 It is also **the first Perfect Paul ][ firmware that can be distributed**:
 unlike DECtalk it is GPL-3 throughout, so [`firmware/`](firmware/) holds ready
@@ -112,10 +125,14 @@ by Jenny List.
 
 ## Watch it
 
-[![Perfect Paul II on real hardware](https://i.ytimg.com/vi/QXe7LpF3Q8w/hqdefault.jpg)](https://youtu.be/QXe7LpF3Q8w)
+[![Perfect Paul II speaking with the SP0256-AL2 firmware](https://i.ytimg.com/vi/zNYNel9VgRk/hqdefault.jpg)](https://youtu.be/zNYNel9VgRk)
 
-**[Perfect Paul II on real hardware](https://youtu.be/QXe7LpF3Q8w)** — the
-latest demo.
+**[Perfect Paul II with the SP0256-AL2 firmware](https://youtu.be/zNYNel9VgRk)**
+— the second voice: the emulated Echo ][ / SSA-1 chip, speaking English through
+the 1976 NRL letter-to-sound rules and in native allophone mode.
+
+Earlier: **[Perfect Paul II on real hardware](https://youtu.be/QXe7LpF3Q8w)** —
+the DECtalk firmware.
 
 Earlier: **[Perfect Paul II - A New Speech Synthesizer For The Apple II](https://youtu.be/u6aQdsFBBXw)**
 — the card talking, singing *Daisy Bell*, and running ELIZA.
