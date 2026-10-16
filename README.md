@@ -16,6 +16,10 @@ can simply download and flash: it is GPL-3 throughout, so ready images live in
 [`firmware/`](firmware/) — see
 [The SP0256-AL2 firmware](#the-sp0256-al2-firmware).
 
+**And it has a face.** [The vector head](#the-vector-head) is the 1985 CPC
+wireframe head ported to the Apple II, lip-synced to the SP0256 firmware and
+speaking whatever you type.
+
 ![Perfect Paul II, final revision 2 board](images/perfect-paul-ii-v2.jpg)
 
 **Status: finished.** The final revision 2 board has been fabricated,
@@ -26,6 +30,23 @@ a jumper.
 **The Gerbers are published:** [`pcb/gerbers-v2.zip`](pcb/gerbers-v2.zip).
 
 ## Latest News
+
+### October 15th 2026
+
+**The card now has a face.** The 1985 CPC
+[vector head](https://github.com/lambdamikel/animated-speaking-cpc-vector-head)
+is ported to the Apple II and lip-synced to the SP0256 firmware: type a
+sentence, and the head says it. See [The vector head](#the-vector-head).
+
+![The head speaking a typed sentence](images/vhead-talking.png)
+
+It only works with this card. A real SP0256 can be asked what it is doing —
+the CPC version polls `LRQ` — but the slot here is write-only, so the sync is
+open loop off durations measured out of the emulation, and the letter-to-sound
+rules had to be ported to the 6502 as well so the Apple II knows what the card
+is about to say. Those are generated from the firmware's own `nrl.c` and
+checked against it over 4000 dictionary words.
+
 
 ### October 14th 2026
 
@@ -114,6 +135,10 @@ by Jenny List.
   - [Testing it without hardware](#testing-it-without-hardware)
   - [The bug that cost an evening](#the-bug-that-cost-an-evening)
   - [Known limits](#known-limits)
+- [The vector head](#the-vector-head)
+  - [Running it](#running-it)
+  - [The rules run on the 6502 as well](#the-rules-run-on-the-6502-as-well)
+  - [Keeping the mouth with the voice](#keeping-the-mouth-with-the-voice)
 - [Assembly and first power-up](#assembly-and-first-power-up)
 - [Validation status](#validation-status)
   - [Software exercised on the card](#software-exercised-on-the-card)
@@ -1167,6 +1192,104 @@ must speak more than once".
   share a vowel.
 * **1976 rules, no dictionary.** They will get words wrong.
 
+## The vector head
+
+![The head speaking a typed sentence](images/vhead-talking.png)
+
+A talking wireframe head, lip-synced to the card. Type a sentence; the SP0256
+says it and the mouth moves with it.
+
+It is a port of the CPC
+[vector head](https://github.com/lambdamikel/animated-speaking-cpc-vector-head)
+— same 1985 digitised model, same moving groups, same ten mouth shapes, same
+three eyelid states. The model and the anchoring are unchanged; this is a new
+emitter and a new renderer, not a new head.
+
+**It lives here rather than in a repository of its own, because it will only
+work with this card.** The CPC version also ran on an Amstrad SSA-1: a real
+SP0256 can be asked what it is doing — `LRQ` says when it has taken the next
+allophone, `SBY` when it has finished. Here the 74LVC245 faces one way and the
+slot is write-only, so there is nothing to ask, and everything about the way
+this one keeps time follows from that.
+
+Sources, a much longer write-up and the tests are in
+[`pico-apple2/vector-head/`](pico-apple2/vector-head/).
+
+### Running it
+
+[`disk/vhead.dsk`](disk/vhead.dsk) is the SP0256 demo disk with the head added
+to its menu. It needs the **SP0256-AL2 firmware**, not the DECtalk one, and the
+card in **slot 4**.
+
+```
+RUN VHEAD
+```
+
+The head is drawn once, says a line of its own, and then prompts. Return on an
+empty line quits; any key during a sentence stops it and silences the card.
+
+```
+SAY WHAT? (RETURN ALONE TO STOP)
+>THE QUICK BROWN FOX JUMPS OVER THE LAZY DOG
+```
+
+![Four seconds of a sentence](images/vhead-talking.gif)
+
+Ten mouth shapes, one per class of allophone:
+
+![The ten mouth shapes](images/vhead-visemes.png)
+
+and three eyelid states, so it blinks — while it speaks *and* while it waits:
+
+![The three eyelid states](images/vhead-eyes.png)
+
+### The rules run on the 6502 as well
+
+For the head to lip-sync text you type, it has to know the allophones, and it
+cannot ask the card. So the NRL letter-to-sound rules run on the Apple II too:
+320 rules, the context-class language, the exception table, digit expansion and
+all of stage 2's positional variants.
+
+Two implementations of the same rules would drift, so they are not really two.
+[`tools/mknrl_a2.py`](pico-apple2/vector-head/tools/mknrl_a2.py) generates the
+6502 tables **from the firmware's own
+[`nrl.c`](pico-apple2/sp0256/nrl.c)** — rules, exceptions, digit words,
+phoneme numbering, AL2 codes. A rule fixed in the firmware is fixed here by
+rebuilding; only the matcher is written twice. And the matcher is a literal
+transcription *including where `nrl.c` departs from the 1976 report*, because
+the card speaks what `nrl.c` decides and the mouth has to agree with the card.
+
+`test/nrltest.py` runs both over **4000 dictionary words** and requires
+identical allophone streams.
+
+It costs 3508 bytes of tables and about 15 ms a word, so a ten-word sentence
+pauses roughly 150 ms between Return and the first sound.
+
+### Keeping the mouth with the voice
+
+Three things, none of them obvious:
+
+**The durations are measured, not read off the data sheet.** The sheet is
+nominal for a real chip; the emulation plays the AL2 ROM's own frame repeat
+counts, and those are shorter — OY is 291 ms against the sheet's 420. One
+sentence came to 3.86 s of audio where the sheet made it 5.18 s, so the mouth
+was 34% slow before a pixel was drawn. `pp2_render -q` gives the truth.
+
+**The whole sentence goes across in one burst.** The firmware's stage holds
+4096 allophones, so the chip speaks to its own clock and the animation cannot
+stretch it. Before that, the drawing time was being spent *before* each
+allophone was sent and never taken off the delay that followed, so the card ran
+dry between allophones and the speech came out stretched and lagging.
+
+**Nothing is drawn at run time.** The mouth used to be plotted with Bresenham,
+which is **279 ms a change** — 12.6 s of drawing against 3.9 s of speech. The
+thirteen shapes are rasterised on the PC instead and kept as HGR bytes, so a
+change is a block copy: 8.70 ms for the mouth, 3.98 ms for the eyes, into the
+page that is not being displayed.
+
+Measured on a simulated 6502 with the real delay loops running: **worst
+per-shape error +4.5 ms** over a 4.4 s sentence.
+
 ## Assembly and first power-up
 
 The final board passed all of these. Run them on any new build.
@@ -1371,9 +1494,19 @@ shipped by anyone, which is why the two firmwares are two independent CMake
 projects that never share object code. See [`LICENSE-NOTE.md`](LICENSE-NOTE.md).
 
 
-**The files in this repository are MIT licensed** — see [LICENSE](LICENSE).
-That covers the firmware adapter, the PIO program, the build files, the PCB
-Gerbers, the documentation, the BASIC programs, and the photographs.
+**`pico-apple2/vector-head/` is GPL-3 as well**, because it is generated from
+`pico-apple2/sp0256/` — its letter-to-sound tables come out of that project's
+`nrl.c` — and because the head is a port of the GPL-3 CPC
+[vector head](https://github.com/lambdamikel/animated-speaking-cpc-vector-head).
+The 1985 BASIC it is digitised from and the digitisation are Michael Wessel's
+own work. The 1976 NRL rules are a US Government work. **No third-party binary
+is involved**: the CPC version calls Amstrad's 1985 SSA-1 driver for its rules
+and so cannot ship them, but nothing here needs a byte of it.
+
+**The rest of the files in this repository are MIT licensed** — see
+[LICENSE](LICENSE). That covers the firmware adapter, the PIO program, the
+build files, the PCB Gerbers, the documentation, the BASIC programs, and the
+photographs.
 
 **It does not cover DECtalk.** The DECtalkMini core carries affirmative
 proprietary notices from Force, Fonix Corporation, and Digital Equipment
@@ -1383,7 +1516,10 @@ embeds the core and its 390 KB dictionary. Build your own from your own
 DECtalkMini checkout, and read [LICENSE-NOTE.md](LICENSE-NOTE.md) before
 redistributing anything you build.
 
-**Nor does it cover Apple's system files.** The demo disk
-[`disk/perfect-paul.dsk`](disk/perfect-paul.dsk) is a ProDOS disk, so it carries
-Apple's `PRODOS.SYS` and `BASIC.SYSTEM`, which are there only to make it
-bootable. The listings in [`basic/`](basic/) are the source of record.
+**Nor does it cover Apple's system files.** The demo disks
+[`disk/perfect-paul.dsk`](disk/perfect-paul.dsk) and
+[`disk/vhead.dsk`](disk/vhead.dsk) are ProDOS disks, so they carry Apple's
+`PRODOS.SYS` and `BASIC.SYSTEM`, which are there only to make them bootable.
+The listings in [`basic/`](basic/) and the sources in
+[`pico-apple2/vector-head/src/`](pico-apple2/vector-head/src/) are the source
+of record.

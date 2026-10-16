@@ -16,3 +16,14 @@ build/
 # deliberately narrow: it cannot match a DECtalk build, so the blanket *.uf2
 # ignore above still protects against committing one by accident.
 !firmware/perfectpaul2-sp0256-*.uf2
+
+# Build products of the host tools and the 6502 sources. The sources, the
+# generated tables and the disk image are tracked; anything an assembler,
+# a compiler or Python produces from them is not.
+*.o
+*.lbl
+__pycache__/
+pico-apple2/sp0256/host/nrl_test
+pico-apple2/sp0256/host/pp2_render
+pico-apple2/sp0256/host/second_utterance
+pico-apple2/sp0256/host/say_rules
