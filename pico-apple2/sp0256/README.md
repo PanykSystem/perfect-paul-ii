@@ -2,8 +2,8 @@
 
 An alternative firmware for the **same card**. Flash this `.uf2` instead of the
 DECtalk one and the Apple II gains a **General Instrument SP0256-AL2** — the
-chip in the **Echo ][**, the Street Electronics **Cricket**, the Amstrad
-**SSA-1** and the Radio Shack speech module — emulated by LPC synthesis from
+chip in the Amstrad **SSA-1**, the Radio Shack **Speech/Sound Cartridge**
+and a generation of 1980s allophone add-ons — emulated by LPC synthesis from
 its own mask ROM, not played back from samples.
 
 No hardware change. Same slot interface, same 74LVC245, same audio stage, same

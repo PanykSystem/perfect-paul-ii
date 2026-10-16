@@ -4,8 +4,8 @@
    An alternative UF2 for the same card as the DECtalk firmware: same slot
    interface, same 74LVC245, same audio stage, same stop byte. Instead of
    DECtalk it runs a cycle-accurate emulation of the General Instrument
-   SP0256-AL2 -- the chip in the Apple II's own Echo II and Street Electronics
-   Cricket, and in the Amstrad SSA-1 -- rebuilt from its mask ROM by LPC
+   SP0256-AL2 -- the chip in the Amstrad SSA-1 and the Radio Shack
+   Speech/Sound Cartridge -- rebuilt from its mask ROM by LPC
    synthesis rather than played back from samples.
 
    The slot front end, the audio setup and the GP0-GP8 warnings below are

@@ -9,7 +9,7 @@ cannot tell which it is running.
 | | |
 |---|---|
 | **DECtalk** | plain text, and singing in DECtalk's phoneme mode. The 1980s DEC voice the card is named for. |
-| **SP0256-AL2** | an emulated General Instrument SP0256-AL2 — the chip in the **Echo ][**, the **Cricket** and the Amstrad **SSA-1** — with **English text-to-speech** in firmware via the 1976 Naval Research Laboratory letter-to-sound rules, *and* a **native allophone mode** for writing speech by hand the way the 1980s listings do. |
+| **SP0256-AL2** | an emulated General Instrument SP0256-AL2 — the chip in the Amstrad **SSA-1** and the Radio Shack **Speech/Sound Cartridge** — with **English text-to-speech** in firmware via the 1976 Naval Research Laboratory letter-to-sound rules, *and* a **native allophone mode** for writing speech by hand the way the 1980s listings do. |
 
 Drive either from BASIC with `POKE`. The SP0256 firmware is also the one you
 can simply download and flash: it is GPL-3 throughout, so ready images live in
@@ -153,7 +153,7 @@ by Jenny List.
 [![Perfect Paul II speaking with the SP0256-AL2 firmware](https://i.ytimg.com/vi/zNYNel9VgRk/hqdefault.jpg)](https://youtu.be/zNYNel9VgRk)
 
 **[Perfect Paul II with the SP0256-AL2 firmware](https://youtu.be/zNYNel9VgRk)**
-— the second voice: the emulated Echo ][ / SSA-1 chip, speaking English through
+— the second voice: the emulated SSA-1 chip, speaking English through
 the 1976 NRL letter-to-sound rules and in native allophone mode.
 
 Earlier: **[Perfect Paul II on real hardware](https://youtu.be/QXe7LpF3Q8w)** —
@@ -964,8 +964,8 @@ against a known-good baseline instead.
 An **alternative firmware for the same card**. Flash
 [`firmware/perfectpaul2-sp0256-i2s.uf2`](firmware/) instead of the DECtalk
 build and the Apple II gains a **General Instrument SP0256-AL2** — the chip in
-the **Echo ][**, the Street Electronics **Cricket**, the Amstrad **SSA-1** and
-the Radio Shack speech module — emulated by LPC synthesis from its own mask
+the Amstrad **SSA-1**, the Radio Shack **Speech/Sound Cartridge** and a
+generation of 1980s allophone add-ons — emulated by LPC synthesis from its mask
 ROM, not played back from samples.
 
 No hardware change. Same slot interface, same 74LVC245, same audio stage, same

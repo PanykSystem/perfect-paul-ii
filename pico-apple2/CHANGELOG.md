@@ -3,8 +3,8 @@
 ## SP0256-AL2 alternative firmware
 
 Added `sp0256/`: a second, independent firmware for the same card, replacing
-DECtalk with an emulated General Instrument SP0256-AL2 (the Echo ][, Cricket
-and SSA-1 chip) built from its mask ROM by LPC synthesis.
+DECtalk with an emulated General Instrument SP0256-AL2 (the SSA-1 and Radio
+Shack speech chip) built from its mask ROM by LPC synthesis.
 
 - **Separate CMake project, for a licensing reason.** The SP0256 core is GPL-3
   and DECtalk is proprietary; one binary holding both could not be distributed

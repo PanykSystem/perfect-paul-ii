@@ -18,7 +18,7 @@ drift apart.
 
 [`sp0256/`](sp0256/) builds a **second, independent** UF2 for the same card
 that replaces DECtalk with an emulated **General Instrument SP0256-AL2** — the
-Echo ][ / Cricket / SSA-1 chip — and adds English text-to-speech in firmware
+SSA-1 / Radio Shack speech chip — and adds English text-to-speech in firmware
 via the 1976 NRL letter-to-sound rules. No hardware change.
 
 It is a separate CMake project for a licensing reason rather than a
