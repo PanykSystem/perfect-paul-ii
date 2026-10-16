@@ -1369,8 +1369,22 @@ between them they cover the three ways the card gets used:
   stream. It exercises the firmware's line queue and the core-0/core-1 handoff
   under realistic traffic.
 
+On the SP0256 firmware, the `SP.*` programs on
+[`disk/sp0256.dsk`](disk/sp0256.dsk) cover the same ground — including
+`SP.ELIZA`, interactive, through a chip discontinued decades ago.
+
+- **The vector head** is the hardest thing the card has been asked to do, and
+  it works. It is 6502 machine code rather than Applesoft, so it writes to the
+  slot roughly two hundred times faster than a `POKE` loop; it hands over a
+  whole sentence in one burst rather than a line at a time; and it depends on
+  the firmware's 4096-allophone stage absorbing that burst and then speaking it
+  back at exactly the rate the animation assumes. A dropped or late allophone
+  would show as the mouth drifting out of step, which is far easier to see than
+  to hear. It does not drift. See [The vector head](#the-vector-head).
+
 Together with the earlier self test, the card is now exercised on plain text,
-phoneme/singing mode, and interactive use.
+phoneme/singing mode, interactive use, allophones, and a timed burst from
+machine code.
 
 ### Not measured
 
@@ -1387,7 +1401,11 @@ The card works; these have not been instrumented:
 
 There is no hardware flow control. PIO captures each selected write into an
 eight-word FIFO, which is ample for `POKE` traffic; a tightly optimised 6502
-loop writing a continuous stream can overrun it.
+loop writing a continuous stream can overrun it. The vector head is exactly
+that loop, and paces itself at about 200 µs a byte for this reason — which
+gives the receiver 1.6 ms of slack and still puts a whole sentence across in
+under 40 ms. That pacing has not been narrowed down experimentally: nobody has
+established how fast it could actually go, only that this is comfortable.
 
 ### How this was verified
 
