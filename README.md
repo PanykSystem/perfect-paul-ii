@@ -1,5 +1,7 @@
 # Perfect Paul ][
 
+#### Project Page: [www.michael-wessel.info/hardware.html](https://www.michael-wessel.info/hardware.html#perfect-paul)
+
 A speech synthesizer card for the Apple II, built on a Raspberry Pi Pico.
 Named for DECtalk's default voice, `[:np]`.
 
