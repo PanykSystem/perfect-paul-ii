@@ -26,6 +26,10 @@ pp2_render.o: pp2_render.c ; $(CC) $(CFLAGS) -c -o $@ $<
 pp2_sp0256.o: ../pp2_sp0256.c ; $(CC) $(CFLAGS) -c -o $@ $<
 sp0256_speak.o: ../core/sp0256_speak.c ; $(CC) $(CFLAGS) -c -o $@ $<
 sp0256_rom.o: ../core/sp0256_rom.cpp ; $(CXX) $(CXXFLAGS) -c -o $@ $<
+sustain_test.o: sustain_test.c ; $(CC) $(CFLAGS) -c -o $@ $<
+sustain_test: sustain_test.o sp0256.o sp0256_al2.o sp0256_rom.o sp0256_speak.o
+	$(CXX) -o $@ sustain_test.o sp0256.o sp0256_al2.o sp0256_rom.o sp0256_speak.o
+
 sp0256.o: ../vendor/sp0256.c ; $(CC) $(CFLAGS) -c -o $@ $<
 sp0256_al2.o: ../vendor/sp0256_al2.cpp ; $(CXX) $(CXXFLAGS) -c -o $@ $<
 

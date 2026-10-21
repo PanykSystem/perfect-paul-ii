@@ -26,4 +26,5 @@ __pycache__/
 pico-apple2/sp0256/host/nrl_test
 pico-apple2/sp0256/host/pp2_render
 pico-apple2/sp0256/host/second_utterance
+pico-apple2/sp0256/host/sustain_test
 pico-apple2/sp0256/host/say_rules
